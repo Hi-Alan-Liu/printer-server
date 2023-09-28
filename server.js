@@ -18,13 +18,28 @@ app.get('/', function (req, res) {
 app.post('/api/printer', async function (req, res) {
   const gid = req.body["gid"];
   const doc = new PDFDocument({
-    size: [114, 52],
+    size: [180, 52],
     margin: 0
   })
+  doc.font('./fonts/rttf.ttf')
 
   await QRCode.toDataURL(`${gid}`, function (err, url) {
     if (err) throw err
-    doc.image(url, 30, 2, { width: 50 })
+    
+    doc.fontSize(4).text('東琉線交通客船聯營處', 10, 6)
+    doc.fontSize(5).text('琉球 > 東港', 10, 17)
+    doc.fontSize(5).text('全票 200 元', 10, 23)
+    doc.fontSize(3).text('購買時間：2023-09-28',10, 35)
+    doc.fontSize(3).text('2023-0928 10:00 印製', 10, 40)
+
+    doc.image(url, 60, 2, { width: 50 })
+
+    doc.fontSize(4).text('東琉線交通客船聯營處', 120, 6)
+    doc.fontSize(5).text('琉球 > 東港', 120, 17)
+    doc.fontSize(5).text('全票 200 元', 120, 23)
+    doc.fontSize(3).text('購買時間：2023-09-28', 120, 35)
+    doc.fontSize(3).text('2023-0928 10:00 印製', 120, 40)
+
     // doc.pipe(fs.createWriteStream('./test.pdf'))
     doc.pipe(concat(function (data) {
       var printer = ipp.Printer('http://127.0.0.1:631/printers/star-tsp700ii')
