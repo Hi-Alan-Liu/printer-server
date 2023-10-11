@@ -17,6 +17,11 @@ app.get('/', function (req, res) {
 
 app.post('/api/printer', async function (req, res) {
   const gid = req.body["gid"];
+  const localtion = req.body["localtion"];
+  const date = req.body["date"];
+  const type = req.body["type"];
+  const price = req.body["price"];
+  const time_now = new Date().toLocaleString();
   const doc = new PDFDocument({
     size: [180, 52],
     margin: 0
@@ -26,33 +31,29 @@ app.post('/api/printer', async function (req, res) {
   await QRCode.toDataURL(`${gid}`, function (err, url) {
     if (err) throw err
     
-    doc.fontSize(4).text('東琉線交通客船聯營處', 10, 6)
-    doc.fontSize(5).text('琉球 > 東港', 10, 17)
-    doc.fontSize(5).text('全票 200 元', 10, 23)
-    doc.fontSize(3).text('購買時間：2023-09-28',10, 35)
-    doc.fontSize(3).text('2023-0928 10:00 印製', 10, 40)
+    doc.fontSize(4).text('.', 0, 0)
+    doc.fontSize(4).text('東琉線交通客船聯營處', 20, 6)
+    doc.fontSize(5).text(`${localtion}`, 20, 17)
+    doc.fontSize(5).text(`${type} ${price} 元`, 20, 23)
+    doc.fontSize(3).text(`購買時間： ${date}`, 20, 35)
+    doc.fontSize(3).text(`${time_now} 印製`, 20, 40)
 
-    doc.image(url, 60, 2, { width: 50 })
+    doc.image(url, 70, 2, { width: 50 })
 
-    doc.fontSize(4).text('東琉線交通客船聯營處', 120, 6)
-    doc.fontSize(5).text('琉球 > 東港', 120, 17)
-    doc.fontSize(5).text('全票 200 元', 120, 23)
-    doc.fontSize(3).text('購買時間：2023-09-28', 120, 35)
-    doc.fontSize(3).text('2023-0928 10:00 印製', 120, 40)
+    doc.fontSize(4).text('東琉線交通客船聯營處', 130, 6)
+    doc.fontSize(5).text(`${localtion}`, 130, 17)
+    doc.fontSize(5).text(`${type} ${price} 元`, 130, 23)
+    doc.fontSize(3).text(`購買時間： ${date}`, 130, 35)
+    doc.fontSize(3).text(`${time_now} 印製`, 130, 40)
 
-    // doc.pipe(fs.createWriteStream('./test.pdf'))
+    doc.pipe(fs.createWriteStream('./test.pdf'))
     doc.pipe(concat(function (data) {
-      var printer = ipp.Printer('http://127.0.0.1:631/printers/star-tsp700ii')
+      var printer = ipp.Printer('http://127.0.0.1:631/printers/_192_168_50_234')
       var msg = {
         "operation-attributes-tag": {
           "requesting-user-name": "ExpressPrinterServer",
           "job-name": "tag-template.pdf",
           "document-format": "application/pdf"
-        },
-        "job-attributes-tag":{
-          "media-col": {
-            "media-source": "tray-2"
-          }
         },
         data: data
       }
@@ -71,7 +72,7 @@ app.get('*', function(req, res) {
   res.send('404 not found');
 });
 
-const server = app.listen(8082, function () {
+const server = app.listen(9998, function () {
   const host = server.address().address;
   const port = server.address().port;
   console.log("Example app listening at http://%s:%s", host, port);
