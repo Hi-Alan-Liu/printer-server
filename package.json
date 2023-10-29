@@ -1,4 +1,12 @@
 {
+  "scripts": {
+    "build": "pkg server.js -t node12-macos-x64 -c package.json"
+  },
+  "pkg": {
+    "assets": [
+      "node_modules/**/*"
+    ]
+  },
   "dependencies": {
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
