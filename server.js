@@ -1,13 +1,15 @@
-const PDFDocument = require('pdfkit')
-const ipp = require('ipp')
-const fs = require('fs')
-var QRCode = require('qrcode')
-var qr = require('qr-image');  
+const PDFDocument = require('pdfkit');
+const ipp = require('ipp');
+const fs = require('fs');
+var QRCode = require('qrcode');
+var qr = require('qr-image');
+var cors = require('cors');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const concat = require('concat-stream');
 
+app.use(cors());
 app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
@@ -36,7 +38,7 @@ app.post('/api/printer', async function (req, res) {
     doc.fontSize(35).text('東琉線交通客船聯營處', 20, 30)
     doc.fontSize(40).text(`${localtion}`, 20, 90)
     doc.fontSize(40).text(`${type} ${price} 元`, 20, 240)
-    doc.fontSize(30).text(`購買時間： ${date}`, 20, 300)
+    doc.fontSize(25).text(`購買時間： ${date}`, 20, 300)
     doc.fontSize(25).text(`${time_now} 印製`, 20, 350)
 
     doc.image(url, 370, 0, { width: 400 })
@@ -73,7 +75,7 @@ app.get('*', function(req, res) {
   res.send('404 not found');
 });
 
-const server = app.listen(9972, function () {
+const server = app.listen(9971, function () {
   const host = server.address().address;
   const port = server.address().port;
   console.log("Example app listening at http://%s:%s", host, port);
