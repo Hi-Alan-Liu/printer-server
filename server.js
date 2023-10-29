@@ -21,34 +21,35 @@ app.post('/api/printer', async function (req, res) {
   const date = req.body["date"];
   const type = req.body["type"];
   const price = req.body["price"];
+  const ip = req.body["ip"];
+  const serverName = req.body["serverName"]
   const time_now = new Date().toLocaleString();
-  const doc = new PDFDocument({
-    size: [180, 52],
-    margin: 0
-  })
+  const doc = new PDFDocument()
   doc.font('./fonts/rttf.ttf')
 
   await QRCode.toDataURL(`${gid}`, function (err, url) {
     if (err) throw err
-    
+
+    doc.translate(52, 740)
+    doc.rotate(-90, {origin: [0,0]})
     doc.fontSize(4).text('.', 0, 0)
-    doc.fontSize(4).text('東琉線交通客船聯營處', 20, 6)
-    doc.fontSize(5).text(`${localtion}`, 20, 17)
-    doc.fontSize(5).text(`${type} ${price} 元`, 20, 23)
-    doc.fontSize(3).text(`購買時間： ${date}`, 20, 35)
-    doc.fontSize(3).text(`${time_now} 印製`, 20, 40)
+    doc.fontSize(35).text('東琉線交通客船聯營處', 20, 30)
+    doc.fontSize(40).text(`${localtion}`, 20, 90)
+    doc.fontSize(40).text(`${type} ${price} 元`, 20, 240)
+    doc.fontSize(30).text(`購買時間： ${date}`, 20, 300)
+    doc.fontSize(25).text(`${time_now} 印製`, 20, 350)
 
-    doc.image(url, 70, 2, { width: 50 })
+    doc.image(url, 370, 0, { width: 400 })
 
-    doc.fontSize(4).text('東琉線交通客船聯營處', 130, 6)
-    doc.fontSize(5).text(`${localtion}`, 130, 17)
-    doc.fontSize(5).text(`${type} ${price} 元`, 130, 23)
-    doc.fontSize(3).text(`購買時間： ${date}`, 130, 35)
-    doc.fontSize(3).text(`${time_now} 印製`, 130, 40)
+    // doc.fontSize(4).text('東琉線交通客船聯營處', 130, 6)
+    // doc.fontSize(5).text(`${localtion}`, 130, 17)
+    // doc.fontSize(5).text(`${type} ${price} 元`, 130, 23)
+    // doc.fontSize(3).text(`購買時間： ${date}`, 130, 35)
+    // doc.fontSize(3).text(`${time_now} 印製`, 130, 40)
 
     doc.pipe(fs.createWriteStream('./test.pdf'))
     doc.pipe(concat(function (data) {
-      var printer = ipp.Printer('http://127.0.0.1:631/printers/_192_168_50_234')
+      var printer = ipp.Printer(`http://${ip}/printers/${serverName}`)
       var msg = {
         "operation-attributes-tag": {
           "requesting-user-name": "ExpressPrinterServer",
@@ -72,7 +73,7 @@ app.get('*', function(req, res) {
   res.send('404 not found');
 });
 
-const server = app.listen(9998, function () {
+const server = app.listen(9972, function () {
   const host = server.address().address;
   const port = server.address().port;
   console.log("Example app listening at http://%s:%s", host, port);
