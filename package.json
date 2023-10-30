@@ -1,7 +1,7 @@
 {
   "scripts": {
     "serve": "node server.js",
-    "build": "pkg server.js -t node12-macos-x64 -c package.json"
+    "build": "pkg server.js -t node12-macos-x64 -c package.json -o dist/server"
   },
   "pkg": {
     "assets": [
