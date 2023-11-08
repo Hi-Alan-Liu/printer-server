@@ -2,12 +2,13 @@ const PDFDocument = require('pdfkit');
 const ipp = require('ipp');
 const fs = require('fs');
 var QRCode = require('qrcode');
-var qr = require('qr-image');
+var moment = require('moment');
 var cors = require('cors');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const concat = require('concat-stream');
+
 
 app.use(cors());
 app.use(bodyParser.json()) // for parsing application/json
@@ -20,12 +21,14 @@ app.get('/', function (req, res) {
 app.post('/api/printer', async function (req, res) {
   const gid = req.body["gid"];
   const localtion = req.body["localtion"];
+  const localtionEn = req.body["localtionEn"];
   const date = req.body["date"];
   const type = req.body["type"];
   const price = req.body["price"];
+  const passengerName = req.body["passengerName"]
   const ip = req.body["ip"];
   const serverName = req.body["serverName"]
-  const time_now = new Date().toLocaleString();
+  const time_now = moment(new Date(), "YYYY-MM-DD HH:mm:ss");//new Date().toLocaleString();
   const doc = new PDFDocument()
   doc.font('./fonts/rttf.ttf')
 
@@ -35,13 +38,15 @@ app.post('/api/printer', async function (req, res) {
     doc.translate(52, 740)
     doc.rotate(-90, {origin: [0,0]})
     doc.fontSize(4).text('.', 0, 0)
-    doc.fontSize(35).text('東琉線交通客船聯營處', 20, 30)
-    doc.fontSize(40).text(`${localtion}`, 20, 90)
-    doc.fontSize(40).text(`${type} ${price} 元`, 20, 240)
-    doc.fontSize(25).text(`購買時間： ${date}`, 20, 300)
-    doc.fontSize(25).text(`${time_now} 印製`, 20, 350)
+    doc.fontSize(40).text('東琉線交通客船聯營處', 20, 20)
+    doc.fontSize(50).text(`${localtion}`, 20, 85)
+    doc.fontSize(25).text(`${localtionEn}`, 20, 140)
+    doc.fontSize(35).text(`${passengerName}`, 20, 200)
+    doc.fontSize(40).text(`${type} ${price} 元`, 20, 260)
+    doc.fontSize(25).text(`搭乘時間： ${date}`, 20, 320)
+    doc.fontSize(20).text(`${moment(String(time_now)).format('YYYY-MM-DD HH:mm:ss')} 印製`, 20, 360)
 
-    doc.image(url, 370, 0, { width: 400 })
+    doc.image(url, 380, 20, { width: 380 })
 
     // doc.fontSize(4).text('東琉線交通客船聯營處', 130, 6)
     // doc.fontSize(5).text(`${localtion}`, 130, 17)
@@ -75,7 +80,7 @@ app.get('*', function(req, res) {
   res.send('404 not found');
 });
 
-const server = app.listen(9971, function () {
+const server = app.listen(9999, function () {
   const host = server.address().address;
   const port = server.address().port;
   console.log("Example app listening at http://%s:%s", host, port);
