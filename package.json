@@ -1,11 +1,13 @@
 {
   "scripts": {
     "serve": "node server.js",
-    "build": "pkg server.js -t node10-macos-x64 -c package.json -o dist/server"
+    "build": "pkg server.js -t node10-macos-x64 -c package.json -o server"
   },
   "pkg": {
     "assets": [
-      "node_modules/**/*"
+      "node_modules/**/*",
+      "fonts/**/*",
+      "views/**/*"
     ]
   },
   "dependencies": {
