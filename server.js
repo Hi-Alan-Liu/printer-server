@@ -25,9 +25,11 @@ app.post('/api/printer', async function (req, res) {
   const date = req.body["date"];
   const type = req.body["type"];
   const price = req.body["price"];
-  const passengerName = req.body["passengerName"]
+  const passengerName = req.body["passengerName"];
   const ip = req.body["ip"];
-  const serverName = req.body["serverName"]
+  const serverName = req.body["serverName"];
+  const order = req.body["order"];
+  const isRoundTrip = req.body["isRoundTrip"] ? './images/roundTrip_true.png' : './images/roundTrip_false.png';
   const time_now = moment(new Date(), "YYYY-MM-DD HH:mm:ss");//new Date().toLocaleString();
   const doc = new PDFDocument()
   doc.font('./fonts/rttf.ttf')
@@ -39,20 +41,19 @@ app.post('/api/printer', async function (req, res) {
     doc.rotate(-90, {origin: [0,0]})
     doc.fontSize(4).text('.', 0, 0)
     doc.fontSize(40).text('東琉線交通客船聯營處', 20, 20)
+    // doc.fontSize(60).text('來回', 20, 0)
     doc.fontSize(50).text(`${localtion}`, 20, 85)
     doc.fontSize(25).text(`${localtionEn}`, 20, 140)
     doc.fontSize(35).text(`${passengerName}`, 20, 200)
     doc.fontSize(40).text(`${type} ${price} 元`, 20, 260)
+    doc.image(isRoundTrip, 225, 165, { width: 180 })
+
     doc.fontSize(25).text(`搭乘時間： ${date}`, 20, 320)
-    doc.fontSize(20).text(`${moment(String(time_now)).format('YYYY-MM-DD HH:mm:ss')} 印製`, 20, 360)
+    doc.fontSize(20).text(`${order}`, 20, 355)
+    doc.fontSize(20).text(`${moment(String(time_now)).format('YYYY-MM-DD HH:mm:ss')} 印製`, 20, 380)
 
-    doc.image(url, 380, 20, { width: 380 })
-
-    // doc.fontSize(4).text('東琉線交通客船聯營處', 130, 6)
-    // doc.fontSize(5).text(`${localtion}`, 130, 17)
-    // doc.fontSize(5).text(`${type} ${price} 元`, 130, 23)
-    // doc.fontSize(3).text(`購買時間： ${date}`, 130, 35)
-    // doc.fontSize(3).text(`${time_now} 印製`, 130, 40)
+    doc.image(url, 380, 0, { width: 380 })
+    doc.image('./images/Remark.png', 430, 360, { width: 260 })
 
     doc.pipe(fs.createWriteStream('./test.pdf'))
     doc.pipe(concat(function (data) {
@@ -80,7 +81,7 @@ app.get('*', function(req, res) {
   res.send('404 not found');
 });
 
-const server = app.listen(9999, function () {
+const server = app.listen(8868, function () {
   const host = server.address().address;
   const port = server.address().port;
   console.log("Example app listening at http://%s:%s", host, port);
