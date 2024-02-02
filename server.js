@@ -50,7 +50,7 @@ app.post('/api/printer', async function (req, res) {
 
     doc.fontSize(25).text(`搭乘時間： ${date}`, 20, 320)
     doc.fontSize(20).text(`${order}`, 20, 355)
-    doc.fontSize(20).text(`${moment(String(time_now)).format('YYYY-MM-DD HH:mm:ss')} 印製`, 20, 380)
+    doc.fontSize(20).text(`${time_now} 印製`, 20, 380)
 
     doc.image(url, 380, 0, { width: 380 })
     doc.image('./images/Remark.png', 430, 360, { width: 260 })
