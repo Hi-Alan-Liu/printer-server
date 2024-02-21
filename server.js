@@ -20,6 +20,7 @@ app.get('/', function (req, res) {
 
 app.post('/api/printer', async function (req, res) {
   const gid = req.body["gid"];
+  const shortGid = req.body["shortGid"];
   const localtion = req.body["localtion"];
   const localtionEn = req.body["localtionEn"];
   const date = req.body["date"];
@@ -30,7 +31,8 @@ app.post('/api/printer', async function (req, res) {
   const serverName = req.body["serverName"];
   const order = req.body["order"];
   const isRoundTrip = req.body["isRoundTrip"] ? './images/roundTrip_true.png' : './images/roundTrip_false.png';
-  const time_now = moment(new Date(), "YYYY-MM-DD HH:mm:ss");//new Date().toLocaleString();
+  const time_now = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+  const source = req.body["source"];
   const doc = new PDFDocument()
   doc.font('./fonts/rttf.ttf')
 
@@ -44,12 +46,13 @@ app.post('/api/printer', async function (req, res) {
     // doc.fontSize(60).text('來回', 20, 0)
     doc.fontSize(50).text(`${localtion}`, 20, 85)
     doc.fontSize(25).text(`${localtionEn}`, 20, 140)
-    doc.fontSize(35).text(`${passengerName}`, 20, 200)
+    doc.fontSize(30).text(`${passengerName}`, 20, 180)
+    doc.fontSize(30).text(`${source}`, 20, 220)
     doc.fontSize(40).text(`${type} ${price} 元`, 20, 260)
     doc.image(isRoundTrip, 225, 165, { width: 180 })
 
     doc.fontSize(25).text(`搭乘時間： ${date}`, 20, 320)
-    doc.fontSize(20).text(`${order}`, 20, 355)
+    doc.fontSize(20).text(`${order} (${shortGid})`, 20, 355)
     doc.fontSize(20).text(`${time_now} 印製`, 20, 380)
 
     doc.image(url, 380, 0, { width: 380 })
