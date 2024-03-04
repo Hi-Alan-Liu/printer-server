@@ -51,12 +51,12 @@ app.post('/api/printer', async function (req, res) {
     doc.fontSize(30).text(`${source}`, 20, 200)
 
     if (isShowPrintPrice) {
-      doc.fontSize(40).text(`${type} ${price} 元`, 20, 240)
+      doc.fontSize(35).text(`${type} ${price} 元`, 20, 240)
     } else {
-      doc.fontSize(40).text(`${type}`, 20, 240)
+      doc.fontSize(35).text(`${type}`, 20, 240)
     }
     
-    doc.image(isRoundTrip, 225, 155, { width: 190 })
+    doc.image(isRoundTrip, 225, 145, { width: 175 })
 
     doc.fontSize(25).text(`搭乘時間： ${date}`, 20, 290)
     doc.fontSize(20).text(`現場購票(當日有效，遺失補票)`, 20, 335)
