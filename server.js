@@ -54,12 +54,10 @@ app.post('/api/printer', async function (req, res) {
 
     doc.fontSize(33).text(`${passengerName}`, 20, 150)
 
-
-    
-
-    doc.fontSize(45).text(`${ticketIconAbbreviation}`, 275, 155)
-
-    doc.image(ticketIconAbbreviationBg, 265, 150, { width: 225 })
+    if (ticketIconAbbreviation != '') {
+      doc.fontSize(45).text(`${ticketIconAbbreviation}`, 275, 155)
+      doc.image(ticketIconAbbreviationBg, 265, 150, { width: 225 })
+    }
 
     doc.fontSize(23).text(`搭乘時間:`, 20, 200)
 
