@@ -20,6 +20,7 @@ app.get('/', function (req, res) {
 
 app.post('/api/printer', async function (req, res) {
   const gid = req.body["gid"];
+  const shortGid = req.body["shortGid"];
   const localtion = req.body["localtion"];
   const localtionEn = req.body["localtionEn"];
   const date = req.body["date"];
@@ -30,7 +31,11 @@ app.post('/api/printer', async function (req, res) {
   const serverName = req.body["serverName"];
   const order = req.body["order"];
   const isRoundTrip = req.body["isRoundTrip"] ? './images/roundTrip_true.png' : './images/roundTrip_false.png';
-  const time_now = moment(new Date(), "YYYY-MM-DD HH:mm:ss");//new Date().toLocaleString();
+  const time_now = moment(new Date()).format("YYYY-MM-DD HH:mm");
+  const source = req.body["source"];
+  const isShowPrintPrice = req.body["isShowPrintPrice"];
+  const ticketIconAbbreviation = req.body["ticketIconAbbreviation"];
+  const ticketIconAbbreviationBg = './images/ticketIconAbbreviationBg.png';
   const doc = new PDFDocument()
   doc.font('./fonts/rttf.ttf')
 
@@ -40,17 +45,34 @@ app.post('/api/printer', async function (req, res) {
     doc.translate(52, 740)
     doc.rotate(-90, {origin: [0,0]})
     doc.fontSize(4).text('.', 0, 0)
-    doc.fontSize(40).text('東琉線交通客船聯營處', 20, 20)
+    doc.fontSize(40).text('東琉線交通客船聯營處', 20, 0)
     // doc.fontSize(60).text('來回', 20, 0)
-    doc.fontSize(50).text(`${localtion}`, 20, 85)
-    doc.fontSize(25).text(`${localtionEn}`, 20, 140)
-    doc.fontSize(35).text(`${passengerName}`, 20, 200)
-    doc.fontSize(40).text(`${type} ${price} 元`, 20, 260)
-    doc.image(isRoundTrip, 225, 165, { width: 180 })
+    doc.fontSize(40).text(`${localtion}`, 20, 60)
+    doc.fontSize(20).text(`${localtionEn}`, 20, 110)
 
-    doc.fontSize(25).text(`搭乘時間： ${date}`, 20, 320)
-    doc.fontSize(20).text(`${order}`, 20, 355)
-    doc.fontSize(20).text(`${moment(String(time_now)).format('YYYY-MM-DD HH:mm:ss')} 印製`, 20, 380)
+    doc.image(isRoundTrip, 250, 60, { width: 145 })
+
+    doc.fontSize(33).text(`${passengerName}`, 20, 150)
+
+    if (ticketIconAbbreviation != '') {
+      doc.fontSize(45).text(`${ticketIconAbbreviation}`, 275, 155)
+      doc.image(ticketIconAbbreviationBg, 265, 150, { width: 225 })
+    }
+
+    doc.fontSize(23).text(`搭乘時間:`, 20, 200)
+
+    doc.fontSize(33).text(`${date}`, 20, 225)
+
+    if (isShowPrintPrice) {
+      doc.fontSize(35).text(`${type} ${price} 元`, 20, 270)
+    } else {
+      doc.fontSize(35).text(`${type}`, 20, 270)
+    }
+    
+    doc.fontSize(27).text(`${source}`, 20, 310)
+    doc.fontSize(20).text(`現場購票(當日有效，遺失補票)`, 20, 345)
+    doc.fontSize(20).text(`${order} (${shortGid})`, 20, 370)
+    doc.fontSize(20).text(`${time_now} 印製`, 20, 395)
 
     doc.image(url, 380, 0, { width: 380 })
     doc.image('./images/Remark.png', 430, 360, { width: 260 })
