@@ -16,3 +16,13 @@ npm run serve
 ```
 npm run build
 ```
+
+### 執行檔案
+```
+./server.js
+```
+
+### docker 指令
+```
+docker run -d --rm --name printer -p 9999:9999 pa013971/printer-server:latest
+```
