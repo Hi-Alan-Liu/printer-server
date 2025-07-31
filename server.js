@@ -27,6 +27,7 @@ app.post('/api/printer', async function (req, res) {
   const type = req.body["type"];
   const price = req.body["price"];
   const passengerName = req.body["passengerName"];
+  const passengerId = req.body["passengerId"];
   const ip = req.body["ip"];
   const serverName = req.body["serverName"];
   const order = req.body["order"];
@@ -49,24 +50,19 @@ app.post('/api/printer', async function (req, res) {
     // doc.fontSize(60).text('來回', 20, 0)
     doc.fontSize(40).text(`${localtion}`, 20, 60)
     doc.fontSize(20).text(`${localtionEn}`, 20, 110)
-
     doc.image(isRoundTrip, 250, 60, { width: 145 })
-
-    doc.fontSize(33).text(`${passengerName}`, 20, 150)
-
+    doc.fontSize(33).text(`${passengerName}`, 20, 145)
     if (ticketIconAbbreviation != '') {
       doc.fontSize(45).text(`${ticketIconAbbreviation}`, 275, 155)
       doc.image(ticketIconAbbreviationBg, 265, 150, { width: 225 })
     }
-
-    doc.fontSize(23).text(`搭乘時間:`, 20, 200)
-
-    doc.fontSize(33).text(`${date}`, 20, 225)
-
+    doc.fontSize(23).text(`${passengerId}`, 20, 183)
+    doc.fontSize(23).text(`搭乘時間:`, 20, 213)
+    doc.fontSize(33).text(`${date}`, 20, 236)
     if (isShowPrintPrice) {
-      doc.fontSize(35).text(`${type} ${price} 元`, 20, 270)
+      doc.fontSize(33).text(`${type} ${price} 元`, 20, 274)
     } else {
-      doc.fontSize(35).text(`${type}`, 20, 270)
+      doc.fontSize(33).text(`${type}`, 20, 274)
     }
     
     doc.fontSize(27).text(`${source}`, 20, 310)
